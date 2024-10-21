@@ -1,8 +1,6 @@
-# A first-level heading
-## A second-level heading
-### A third-level heading
 
-### Intro
+
+# Intro
 This repository is an environment to develop all things related to the chatbot, that includes: 
 - frontend interfaces, chatbot classes, knowledge base dev, etc.
 
@@ -18,7 +16,7 @@ To implement eventually:
 
 
 
-## Installation
+# Installation
 1. clone repository onto your IDE
 2. Install Dependencies/Requirements
   - cd into src directory
