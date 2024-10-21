@@ -1,18 +1,23 @@
+"""
+CODE TO CREATE A LOCAL FLASK APP WITH APIs TO TEST A CHATBOT WITH A FRONTEND INTERFACE
+
+
+"""
 from flask import Flask, request, jsonify, render_template
 import os
 from langchain_openai import AzureChatOpenAI
 from dotenv import load_dotenv
 
-frontend = {
-    "template":"../../Frontend/Widget-Interface/templates",
-    "static":"../../Frontend/Widget-Interface/static"
-}
 
-folder = "Interface-1"
-# folder = "Widget-Interface"
-
-
+""" Either update the frontend dict to match the templates and folders """
+# frontend = {
+#     "template":"../../Frontend/Widget-Interface/templates",
+#     "static":"../../Frontend/Widget-Interface/static"
+# }
 # app = Flask(__name__, template_folder=frontend["template"], static_folder=frontend["static"])
+
+""" Or simply name the folder (works if the folder includes static and templates subfolders)"""
+folder = "Interface-1"
 
 app = Flask(__name__, template_folder=(f"../../Frontend/{folder}/templates"), static_folder=f"../../Frontend/{folder}/static")
 
