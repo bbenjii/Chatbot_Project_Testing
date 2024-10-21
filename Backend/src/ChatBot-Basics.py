@@ -1,9 +1,11 @@
 """
-LANGCHAIN AZURECHATOPENAI GETSTARTED CODE
-source: https://python.langchain.com/v0.2/docs/integrations/chat/azure_chat_openai/
-        https://python.langchain.com/v0.2/api_reference/openai/chat_models/langchain_openai.chat_models.azure.AzureChatOpenAI.html
+LANGCHAIN BUILD A CHATBOT TUTORIAL
 
-SIMPLE CODE, THAT SHOWS HOW TO USE LANGCHAIN TO CONNECT TO AZURE OPEN AI API AND TRANSLATE A PHRASE TO FRENCH
+source: https://python.langchain.com/v0.2/docs/tutorials/chatbot/
+
+CODE THAT SHOWS HOW TO BUILD A CHATBOT WITH LANGCHAIN FRAMEWORKS, WITH COMMON USEFUL FEATURES
+
+FEATURES: CHAT MEMORY/HISTORY, PROMPTS, TRIMMING MESSAGES, GRAPH
 """
 from langchain_core.messages import HumanMessage
 

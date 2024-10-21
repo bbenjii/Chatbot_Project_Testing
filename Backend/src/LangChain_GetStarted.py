@@ -1,5 +1,10 @@
 """
-SIMPLE LOGIC TO HAVE BACK AND FORTH MESSAGES WITH OPEN AZURE API"""
+LANGCHAIN AZURECHATOPENAI GETSTARTED CODE
+source: https://python.langchain.com/v0.2/docs/integrations/chat/azure_chat_openai/
+        https://python.langchain.com/v0.2/api_reference/openai/chat_models/langchain_openai.chat_models.azure.AzureChatOpenAI.html
+
+SIMPLE CODE, THAT SHOWS HOW TO USE LANGCHAIN TO CONNECT TO AZURE OPEN AI API AND TRANSLATE A PHRASE TO FRENCH
+"""
 
 
 """_____________________________IMPORTS_________________________________________"""
