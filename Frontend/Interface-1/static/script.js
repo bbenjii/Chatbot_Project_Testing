@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
     const restartBtn = document.getElementById('restart-btn');
+    const chatbot_route = "/chatbot"
 
     // Event listeners
     sendBtn.addEventListener('click', sendMessage);
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addMessage('human', message);
         userInput.value = '';
 
-        fetch('/chat', {
+        fetch(chatbot_route, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

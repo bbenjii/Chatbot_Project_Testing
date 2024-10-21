@@ -62,7 +62,7 @@ class Chatbot1:
         self.app = self.workflow.compile(checkpointer=self.memory)
 
         self.trimmer = trim_messages(
-            max_tokens=65,
+            max_tokens=500,
             strategy="last",
             token_counter=self.model,
             include_system=True,
@@ -101,7 +101,7 @@ class Chatbot1:
 
 
 
-
+" '''''''''''''''''''''''''''''''EXAMPLE OF HOW TO USE THE CLASS''''''''''''''''''''''''''''''' "
 chatbot = Chatbot1()
 def run_chatbot():
     response = chatbot.send_message(print=False)
@@ -114,7 +114,17 @@ def run_chatbot():
         response = chatbot.send_message(user_input, print=False)
         print(f"Chatbot: {response['messages'][-1].content}")
 
+        print("----------------")
+        for message in response["messages"]:
+            print(message.content)
 
+"''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"
+
+
+
+
+
+#nice lil function
 def open_new_console():
     """Opens a new console window and runs this script in that window."""
     if sys.platform == "win32":
@@ -127,6 +137,7 @@ def open_new_console():
         print("Unsupported operating system for this example.")
 
 if __name__ == "__main__":
+
 
     run_chatbot()
 

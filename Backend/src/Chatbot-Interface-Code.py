@@ -8,6 +8,7 @@ import os
 from langchain_openai import AzureChatOpenAI
 from dotenv import load_dotenv
 
+from chatbot1_class import Chatbot1 as Chatbot
 
 """ Either update the frontend dict to match the templates and folders """
 # frontend = {
@@ -42,24 +43,40 @@ llm = AzureChatOpenAI(
     model=deployment_model
 )
 
-messages = [
-    ("system", "You are an AI assistant that helps people find information.")
-]
 
 # _________________________FLASK ROUTES________________________________________________________
 
+#set the route in the script file
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/chat', methods=['POST'])
-def chat():
+def chatbot_no_memory():
+    messages = [
+        ("system", "You are an AI assistant that helps people find information.")
+    ]
     user_message = request.json['message']
     messages.append(("human", user_message))
     response = llm.invoke(messages).content
     messages.append(("system", response))
     return jsonify({'response': response})
+
+
+
+
+""" Route for Chatbot1 Class"""
+systemPrompt = "You are an AI assistant that helps people find information."
+Chatbot = Chatbot(systemPrompt=systemPrompt)
+
+@app.route('/chatbot', methods=['POST'])
+def chatbot():
+    user_message = request.json['message']
+    response = Chatbot.send_message(user_message)
+
+    return jsonify({'response': response["messages"][-1].content})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
