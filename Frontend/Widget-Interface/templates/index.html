@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Widget</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Chatbot Widget -->
+    <div id="chatbot-widget">
+        <div id="chat-container" class="hidden">
+            <div id="messages"></div>
+            <div id="input-container">
+                <input type="text" id="user-input" placeholder="Type your message here..." />
+                <button id="send-btn">Send</button>
+            </div>
+        </div>
+        <div id="chat-toggle">
+            <img src="{{ url_for('static', filename='chat-icon.png') }}" alt="Chatbot" />
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const chatToggle = document.getElementById('chat-toggle');
+        const userInput = document.getElementById('user-input');
+
+        // Toggle chat container visibility
+        chatToggle.addEventListener('click', function() {
+            chatContainer.classList.toggle('hidden');
+            if (!chatContainer.classList.contains('hidden')) {
+                userInput.focus(); // Focus on input when chat is opened
+            }
+        });
+
+        // Send message when the "Enter" key is pressed
+        userInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Close the widget when the "Esc" key is pressed
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && !chatContainer.classList.contains('hidden')) {
+                chatContainer.classList.add('hidden');
+            }
+        });
+
+        // Send message function
+        function sendMessage() {
+            const userInputValue = userInput.value;
+            if (userInputValue.trim() === '') return;
+
+            addMessage('human', userInputValue);
+            userInput.value = '';
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userInputValue }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                addMessage('chatbot', data.response);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Function to add message to the chat
+        function addMessage(sender, text) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = `message ${sender}`;
+            messageContainer.innerText = text;
+            document.getElementById('messages').appendChild(messageContainer);
+            document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+        }
+    </script>
+</body>
+</html>
