@@ -1,10 +1,5 @@
 """
-LANGCHAIN AZURECHATOPENAI GETSTARTED CODE
-source: https://python.langchain.com/v0.2/docs/integrations/chat/azure_chat_openai/
-        https://python.langchain.com/v0.2/api_reference/openai/chat_models/langchain_openai.chat_models.azure.AzureChatOpenAI.html
-
-SIMPLE CODE, THAT SHOWS HOW TO USE LANGCHAIN TO CONNECT TO AZURE OPEN AI API AND TRANSLATE A PHRASE TO FRENCH
-"""
+SIMPLE LOGIC TO HAVE BACK AND FORTH MESSAGES WITH OPEN AZURE API"""
 
 
 """_____________________________IMPORTS_________________________________________"""
@@ -43,14 +38,17 @@ llm = AzureChatOpenAI(
 
 # __________________________ MESSAGE HANDLING________________________________________________
 
+instruction_promp = "You are a helpful assistant that translates English to French. Translate the user sentence."
+
+phrase_to_translate = "I love programming."
 messages = [
-    ("system", "You are an AI assistant that helps people find information.")
+    (
+        "system",
+        instruction_promp,
+    ),
+    ("human", phrase_to_translate),
 ]
 
-print("Chatbot: Hello, ask me anything! In French or English!")
-while True:
-    question = input("\nYou: ")
-    messages.append(("human", question))
-    response = llm.invoke(messages).content
-    print("\nChatbot:", response)
-    messages.append(("system", response))
+ai_msg = llm.invoke(messages)
+
+print(ai_msg.content)
