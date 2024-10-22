@@ -9,10 +9,9 @@ As of right now, the main technologies and tools used are:
 - Python: langchain framework for chatbot building
 - AZURE OPENAI for the llm model api
 
-To implement eventually:
+Technologies to implement eventually:
 - JS React for the frontend
 - docker for build
-- 
 
 
 
@@ -23,3 +22,11 @@ To implement eventually:
   - pip install requirements.txt
 3. Place the required .env file inside the src directory
 4. start coding and testing functions
+
+
+
+# TO-DO
+- try developing some tools / series of actions
+- API functions to start model, restart it
+- knowledge base: embeddings, vector stores, etc
+- 
