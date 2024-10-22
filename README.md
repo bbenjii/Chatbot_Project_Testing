@@ -27,6 +27,7 @@ Technologies to implement eventually:
 
 # TO-DO
 - try developing some tools / series of actions
+- Structured Outputs
 - API functions to start model, restart it
 - knowledge base: embeddings, vector stores, etc
-- 
+- https://langchain-ai.github.io/langgraph/ : important and useful tutorials!
