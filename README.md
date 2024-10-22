@@ -31,3 +31,8 @@ Technologies to implement eventually:
 - API functions to start model, restart it
 - knowledge base: embeddings, vector stores, etc
 - https://langchain-ai.github.io/langgraph/ : important and useful tutorials!
+
+
+# TroubleShooting 
+### Pymongo issues:
+- ssl certification issue: https://stackoverflow.com/questions/52805115/certificate-verify-failed-unable-to-get-local-issuer-certificate
