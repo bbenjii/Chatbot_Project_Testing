@@ -13,6 +13,17 @@ Technologies to implement eventually:
 - JS React for the frontend
 - docker for build
 
+### MongoDB
+structure:
+{
+  "_id": ObjectId("..."),  
+  "file_name": "support_doc.pdf",  
+  "file_type": "pdf",  
+  "content": "The text extracted from the PDF...",  
+  "embedding": [0.1, 0.2, 0.3, ...],  // The vector embedding.   
+  "uploaded_at": ISODate("2024-10-22T10:00:00Z"). 
+}
+
 
 
 # Installation

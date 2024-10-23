@@ -52,32 +52,33 @@ headers = {
 
 loader = WebBaseLoader(url, header_template=headers)
 data = loader.load()
-# print(data)
+print(len(data))
+print(data)
 
 # print(data[0].page_content)
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-all_splits = text_splitter.split_documents(data)
+# text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+# all_splits = text_splitter.split_documents(data)
 
 
-for split in all_splits:
-    split.page_content = (split.page_content.replace("  ","").replace("\n\n",""))
+# for split in all_splits:
+#     split.page_content = (split.page_content.replace("  ","").replace("\n\n",""))
 
 # for split in all_splits:
 #     print(split.page_content)
 #     print("____________________________")
 
 
-vectorstore = Chroma.from_documents(documents=all_splits, embedding=AzureOpenAIEmbeddings())
-
-
-# k is the number of chunks to retrieve
-retriever = vectorstore.as_retriever(k=10)
-
-docs = retriever.invoke("What are the best product to grow a beard faster?")
-
-for doc in docs:
-    print(doc)
-    print("____________________________________")
+# vectorstore = Chroma.from_documents(documents=all_splits, embedding=AzureOpenAIEmbeddings())
+#
+#
+# # k is the number of chunks to retrieve
+# retriever = vectorstore.as_retriever(k=10)
+#
+# docs = retriever.invoke("What are the best product to grow a beard faster?")
+#
+# for doc in docs:
+#     print(doc)
+#     print("____________________________________")
 
 # print(all_splits)
 # for split in all_splits:
