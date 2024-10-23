@@ -60,7 +60,10 @@ def create_vector_search_index():
         print(f"Index created: {result}")
 
     except Exception as e:
-        print(f"Error creating index: {e}")
+        if e.code == 68:
+            print(f"Search index already exists")
+        else:
+            print(f"Error creating index: {e.details}")
     finally:
         # Close the MongoDB connection
         client.close()
