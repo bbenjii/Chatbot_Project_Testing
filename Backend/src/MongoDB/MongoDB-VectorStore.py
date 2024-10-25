@@ -311,10 +311,10 @@ one_piece_chapter_links = [
 ]
 # one_piece_vectorstore.delete_all_documents()
 
-one_piece_vectorstore.insert_data(one_piece_chapter_links, "url")
-wano_pdf = ["../../Test-Documents/one_piece_kb/wano_guide.pdf"]
-one_piece_vectorstore.insert_data(wano_pdf, "pdf")
-one_piece_vectorstore.insert_data(["https://onepiece.fandom.com/wiki/One_Piece_novel_A"], "url")
+# one_piece_vectorstore.insert_data(one_piece_chapter_links, "url")
+# wano_pdf = ["../../Test-Documents/one_piece_kb/wano_guide.pdf"]
+# one_piece_vectorstore.insert_data(wano_pdf, "pdf")
+# one_piece_vectorstore.insert_data(["https://onepiece.fandom.com/wiki/One_Piece_novel_A"], "url")
 # results = one_piece_vectorstore.vector_search("Who is Ace?", top_k=8)
 # for result in results:
     # print(result.page_content)
