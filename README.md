@@ -27,12 +27,20 @@ structure:
 
 
 # Installation
+## BACKEND
 1. clone repository onto your IDE
-2. Install Dependencies/Requirements
-  - cd into src directory
-  - pip install requirements.txt
-3. Place the required .env file inside the src directory
-4. start coding and testing functions
+2. Activate virtual env:
+- cd Backend
+- python3 -m venv .venv
+- source .venv/bin/activate
+
+3. Install Dependencies/Requirements
+  - cd src
+  - pip install -r requirements.txt
+3. Place the required .env file inside the Backend directory
+4. start coding 
+
+## FRONTEND
 
 
 
