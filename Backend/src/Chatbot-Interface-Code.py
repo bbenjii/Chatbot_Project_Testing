@@ -12,8 +12,8 @@ from chatbot1_class import Chatbot1 as Chatbot
 
 """ Either update the frontend dict to match the templates and folders """
 # frontend = {
-#     "template":"../../Frontend/Widget-Interface/templates",
-#     "static":"../../Frontend/Widget-Interface/static"
+#     "template":"../../Frontend2/Widget-Interface/templates",
+#     "static":"../../Frontend2/Widget-Interface/static"
 # }
 # app = Flask(__name__, template_folder=frontend["template"], static_folder=frontend["static"])
 
