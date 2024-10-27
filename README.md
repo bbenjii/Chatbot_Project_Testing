@@ -28,7 +28,7 @@ structure:
 
 # Installation
 ## BACKEND
-1. clone repository onto your IDE
+1. clone repository onto your Python-Dev IDE that supports 
 2. Activate virtual env:
 - cd Backend
 - python3 -m venv .venv
@@ -41,7 +41,15 @@ structure:
 4. start coding 
 
 ## FRONTEND
-frontend
+1. Clone/open repository onto your JS/TS Dev IDE
+2. Navigate to chatbot-app directory
+3. Install modules
+- use the latest node version (currently v23.1.0) 
+- nvm install node
+- nvm use node
+- npm install
+4. run react app
+- npm run dev
 
 
 # TO-DO

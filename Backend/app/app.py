@@ -4,11 +4,24 @@ from controllers.chatbot_controller import Chatbot
 from controllers.vector_store_controller import vectorStore_controller as VectorStore
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all domains on all routes
-
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 # Initialize controllers
 chatbot = Chatbot()
 vector_store = VectorStore()
+
+
+# Route for chatbot interaction
+@app.route('/api/chatbot', methods=['POST'])
+def chat():
+    try:
+        data = request.json
+        user_input = data['message']
+        response = chatbot.send_message(user_input)
+        return response, 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 # Route for adding documents to the knowledge base
 @app.route('/api/knowledge-base/add', methods=['POST'])
@@ -34,16 +47,6 @@ def remove_document():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Route for chatbot interaction
-@app.route('/api/chatbot', methods=['POST'])
-def chat():
-    try:
-        data = request.json
-        user_input = data['message']
-        response = chatbot.send_message(user_input)
-        return jsonify({"response": response}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

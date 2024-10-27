@@ -19,20 +19,20 @@ from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 from typing_extensions import Annotated, TypedDict
 
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, trim_messages
+# from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, trim_messages
 
 import uuid
 
 load_dotenv()  # load .env variables
 
-# def HumanMessage(message : str):
-#     return ("human", message)
-#
-# def SystemMessage(message : str):
-#     return ("system", message)
-#
-# def AIMessage(message : str):
-#     return ("ai", message)
+def HumanMessage(message : str):
+    return ("human", message)
+
+def SystemMessage(message : str):
+    return ("system", message)
+
+def AIMessage(message : str):
+    return ("ai", message)
 
 class Chatbot:
     def __init__(self, systemPrompt = "You are a helpful assistant.", language = "all languages"):
@@ -66,7 +66,7 @@ class Chatbot:
         return context
 
 
-    def send_message(self, query: str, print_output: bool = False) -> str:
+    def send_message(self, query: str, print_output: bool = False):
         # Append the user's message to the conversation history
         self.messageHistory.append(HumanMessage(query))
 
@@ -85,21 +85,25 @@ class Chatbot:
 
         # Prepare the output
         output = {
-            "messages": self.messageHistory
+            "message_history": self.messageHistory,
+            "ai_message": response.content
         }
         if print_output:
             print(ai_message)
 
-        return response.content
+        return output
 
 
 
     def construct_messages(self, messages: List[BaseMessage], context: str = "") -> str:
         # Build the system message with  context
         system_message = (f"{self.systemPrompt} You are capable of answering in {self.language}. "
-                          f"Use the following context to answer the question:\n\n{context}"
-                          f"If the context does not contain the answer, say that you don't know.\n\n"
-)
+ f"Use the following context to answer the question:\n\n{context} "
+ f"If the context does not contain the answer, say that you don't know. Format your answer in an informative, Markdown-friendly manner. "
+ f"Start with a brief introduction, provide the main information in a structured format (use bullet points if necessary), "
+ f"and end with a polite question, asking if further assistance is needed. "
+ f"Use Markdown formatting to make key terms and phrases bold (e.g., **important**), but avoid including extraneous characters. "
+ f"Your response will be rendered as HTML.\n\n")
 
         #Conversation history
         combined_messages = [SystemMessage(system_message)] + messages
@@ -117,7 +121,7 @@ class Chatbot:
 #
 #
 # " '''''''''''''''''''''''''''''''EXAMPLE OF HOW TO USE THE CLASS''''''''''''''''''''''''''''''' "
-# # Example of how to use the class
+# Example of how to use the class
 # def run_chatbot():
 #     chatbot = Chatbot()
 #     print("Chatbot is ready to chat. Type 'exit' or 'quit' to end the conversation.")
@@ -129,6 +133,7 @@ class Chatbot:
 #         response = chatbot.send_message(user_input)
 #
 #         print(response)
+
 #
 #
 # "''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''"

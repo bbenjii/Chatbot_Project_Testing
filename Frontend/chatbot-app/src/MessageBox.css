@@ -1,0 +1,134 @@
+/* MessageBox.css */
+
+.message-box-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    /*padding: 0px;*/
+    /*margin: 20px;*/
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    max-width: 360px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.message-box-container.human {
+    border-top-right-radius: 0px;
+    /*flex-direction: row-reverse ;*/
+}
+
+.message-box-container.ai {
+    border-top-left-radius: 0px;
+}
+
+/*.avatar {*/
+/*    width: 40px;*/
+/*    height: 40px;*/
+/*    border-radius: 50%;*/
+/*    object-fit: cover;*/
+/*}*/
+
+.message-content {
+    display: flex;
+    flex-direction: column;
+    /*background-color: #ffffff;*/
+    padding: 10px;
+    border-radius: 10px;
+    /*border: 1px solid #e0e0e0;*/
+    width: 100%;
+}
+
+.message-content.human {
+    /*align-items: end;*/
+}
+
+.message-content.ai {
+    /*align-items: start;*/
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333333;
+}
+
+.time {
+    font-size: 0.8rem;
+    color: #888888;
+}
+
+.message-text {
+    font-size: 0.9rem;
+    color: #333333;
+    margin: 10px 0;
+}
+
+.status {
+    font-size: 0.8rem;
+    color: #888888;
+    text-align: right;
+}
+
+.dropdown-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.dots-icon {
+    width: 16px;
+    height: 16px;
+    color: #888888;
+    margin: 10px;
+
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    width: 120px;
+    z-index: 10;
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.dropdown-menu li {
+    display: flex;
+}
+
+.dropdown-menu button {
+    background: none;
+    border: none;
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    color: #333333;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown-menu button:hover {
+    background-color: #f0f0f0;
+}
