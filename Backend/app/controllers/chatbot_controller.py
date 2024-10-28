@@ -102,6 +102,7 @@ class Chatbot:
  f"If the context does not contain the answer, say that you don't know. Format your answer in an informative, Markdown-friendly manner. "
  f"Start with a brief introduction, provide the main information in a structured format (use bullet points if necessary), "
  f"and end with a polite question, asking if further assistance is needed. "
+                          f"Keep your answers as concise as possible unless more details are requested. The fewer lines the better"
  f"Use Markdown formatting to make key terms and phrases bold (e.g., **important**), but avoid including extraneous characters. "
  f"Your response will be rendered as HTML.\n\n")
 

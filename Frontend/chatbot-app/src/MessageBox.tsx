@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './MessageBox.css';
+import ReactMarkdown from 'react-markdown';
 
 interface MessageBoxProps {
     name: string;
@@ -20,7 +21,9 @@ const MessageBox = ({ name, message }: MessageBoxProps) => {
                     {/*<span className="time">{time}</span>*/}
                 </div>
 
-                <p className="message-text">{message}</p>
+                <p className="message-text">
+                    <ReactMarkdown>{message}</ReactMarkdown>
+                </p>
 
                 {/*<span className="status">{status}</span>*/}
             </div>
