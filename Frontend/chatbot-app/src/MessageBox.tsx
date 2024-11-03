@@ -21,9 +21,9 @@ const MessageBox = ({ name, message }: MessageBoxProps) => {
                     {/*<span className="time">{time}</span>*/}
                 </div>
 
-                <p className="message-text">
+                <div className="message-text">
                     <ReactMarkdown>{message}</ReactMarkdown>
-                </p>
+                </div>
 
                 {/*<span className="status">{status}</span>*/}
             </div>

@@ -25,7 +25,6 @@ structure:
 }
 
 
-
 # Installation
 ## BACKEND
 1. clone repository onto your Python-Dev IDE that supports 
@@ -50,7 +49,6 @@ structure:
 - npm install
 4. run react app
 - npm run dev
-
 
 # TO-DO
 - try developing some tools / series of actions
