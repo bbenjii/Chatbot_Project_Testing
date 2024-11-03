@@ -225,7 +225,6 @@ class vectorStore_controller:
         return index_name in self.collection.index_information()
 
 #
-# QC_vectorstore = vectorStore_controller()
 #
 #
 # directory = "../Test-Documents/qc-life-documents/"
@@ -272,7 +271,7 @@ class vectorStore_controller:
 #         # print("____________________________________________________________________________________________________")
 #
 #
-#
+# QC_vectorstore = vectorStore_controller()
 # def insert_qc():
 #     qc_links = [
 #         "https://qclife.ca/contact-us/",
@@ -284,11 +283,11 @@ class vectorStore_controller:
 #     ]
 #
 #     QC_vectorstore.insert_data(qc_links, "url")
-#
+# insert_qc()
+
 #
 # # one_piece_vectorstore.delete_all_documents()
 #
-# # insert_qc()
 # # QC_vectorstore.delete_all_documents()
 # # QC_vectorstore.delete_all_documents()
 # # QC_vectorstore.collection.drop_indexes()
