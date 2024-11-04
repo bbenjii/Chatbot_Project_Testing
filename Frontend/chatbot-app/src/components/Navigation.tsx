@@ -48,9 +48,7 @@ const Navigation: React.FC<NavigationProps> = ({ hideSideBar }) => {
                                 alt="Flowbite Logo"
                             />
                             <span
-                                className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                                Chatbot App
-                            </span>
+                                className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
                         </a>
                         <form action="#" method="GET" className="hidden md:block md:pl-2">
                             <label htmlFor="topbar-search" className="sr-only">Search</label>
@@ -85,6 +83,7 @@ const Navigation: React.FC<NavigationProps> = ({ hideSideBar }) => {
                         <button
                             type="button"
                             onClick={hideSideBar}
+
                             className="p-2 mr-1 text-gray-500 rounded-lg md:hidden hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                         >
                             <span className="sr-only">Toggle search</span>

@@ -1,5 +1,5 @@
 // import NavBar from "./NavBar.tsx";
-import MessageBox from "./MessageBox.tsx";
+import MessageBox from "../components/MessageBox.tsx";
 import {useEffect, useState} from "react";
 import axios from 'axios';
 
@@ -15,7 +15,7 @@ interface Message {
     text: string;
 }
 
-export default function ChatbotPage() {
+export default function KnowledgeBase() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputText, setInputText] = useState('');
     const [loading, setLoading] = useState(false);
@@ -59,37 +59,11 @@ export default function ChatbotPage() {
                     <div className="flex justify-center">
                         <div className="flex w-full">
                             <div className="chatbot-card">
-                                {/*<div className="chatbot-header">*/}
-                                {/*    <h2>Chatbot</h2>*/}
-                                {/*</div>*/}
-
-                                <div className="chatbot-messages">
-                                    {messages.map((msg, idx) => (
-                                        <div key={idx} className={`message ${msg.sender}`}>
-                                            <MessageBox name={msg.sender} message={msg.text}/>
-                                        </div>
-                                    ))}
+                                <div className="chatbot-header">
+                                    <h2>KNOWLEDGE BASE</h2>
                                 </div>
 
-                                <form
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        sendMessage();
-                                    }}
-                                >
-                                    <div className="chatbot-input">
-                                        <input
-                                            type="text"
-                                            placeholder="Enter your message..."
-                                            value={inputText}
-                                            onChange={(e) => setInputText(e.target.value)}
-                                        />
-                                        <button type="submit" disabled={loading}>
-                                            {loading ? "Sending..." : "Send"}
 
-                                        </button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>

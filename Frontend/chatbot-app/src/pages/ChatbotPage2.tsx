@@ -1,5 +1,5 @@
-import NavBar from "./NavBar.tsx";
-import MessageBox from "./MessageBox.tsx";
+import NavBar from "../components/NavBar.tsx";
+import MessageBox from "../components/MessageBox.tsx";
 import {useEffect, useState} from "react";
 import axios from 'axios';
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './MessageBox.css';
+import '../MessageBox.css';
 import ReactMarkdown from 'react-markdown';
 
 interface MessageBoxProps {

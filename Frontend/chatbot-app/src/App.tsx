@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import Sidebar from "./Sidebar.tsx";
-// import './App.css'
-import ChatbotPage from "./ChatbotPage.tsx";
-import Navigation from "./Navigation.tsx";
+import { Routes, Route } from 'react-router-dom';
+
+import Sidebar from "./components/Sidebar.tsx";
+import ChatbotPage from "./pages/ChatbotPage.tsx";
+import Navigation from "./components/Navigation.tsx";
+import KnowledgeBase from "./pages/KnowledgeBase.tsx";
 
 function App() {
     const [hideSideBar, setHideSideBar] = useState(true);
@@ -15,15 +17,16 @@ function App() {
   return (
       <>
           <div className="antialiased bg-gray-50 dark:bg-gray-900 ">
-              <nav>
+              <div>
                   <Navigation hideSideBar={showHideSidebar}/>
                   <Sidebar hidden={hideSideBar} />
+              </div>
 
-              </nav>
-              <aside>
-              </aside>
               <main className="p-4 md:ml-64 h-full pt-20">
-                  <ChatbotPage  />
+                  <Routes>
+                      <Route path={"/"} element={<ChatbotPage/>} />
+                      <Route path={"/knowledge-base"} element={<KnowledgeBase />} />
+                  </Routes>
               </main>
           </div>
       </>
