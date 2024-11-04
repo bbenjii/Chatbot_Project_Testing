@@ -17,6 +17,7 @@ def chat():
         data = request.json
         user_input = data['message']
         response = chatbot.send_message(user_input)
+        # print(response)
         return response, 200
 
     except Exception as e:
