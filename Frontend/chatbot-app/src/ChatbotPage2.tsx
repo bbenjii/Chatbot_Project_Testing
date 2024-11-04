@@ -1,4 +1,4 @@
-// import NavBar from "./NavBar.tsx";
+import NavBar from "./NavBar.tsx";
 import MessageBox from "./MessageBox.tsx";
 import {useEffect, useState} from "react";
 import axios from 'axios';
@@ -15,7 +15,7 @@ interface Message {
     text: string;
 }
 
-export default function ChatbotPage() {
+export default function ChatbotPage2() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputText, setInputText] = useState('');
     const [loading, setLoading] = useState(false);
@@ -48,20 +48,20 @@ export default function ChatbotPage() {
 
     return (
         <>
-            <div className="min-h-full ">
-                {/*<NavBar/>*/}
-                {/*<header className="bg-white shadow">*/}
-                {/*    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">*/}
-                {/*        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Chatbot</h1>*/}
-                {/*    </div>*/}
-                {/*</header>*/}
+            <div className="min-h-full bg-gray-800">
+                <NavBar/>
+                <header className="bg-white shadow">
+                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Chatbot</h1>
+                    </div>
+                </header>
                 <main>
                     <div className="flex justify-center">
                         <div className="flex w-full">
                             <div className="chatbot-card">
-                                {/*<div className="chatbot-header">*/}
-                                {/*    <h2>Chatbot</h2>*/}
-                                {/*</div>*/}
+                                <div className="chatbot-header">
+                                    <h2>Chatbot</h2>
+                                </div>
 
                                 <div className="chatbot-messages">
                                     {messages.map((msg, idx) => (
