@@ -51,6 +51,7 @@ structure:
 - npm run dev
 
 # TO-DO
+- Try implementing Web Sockets
 - try developing some tools / series of actions
 - Structured Outputs
 - API functions to start model, restart it
