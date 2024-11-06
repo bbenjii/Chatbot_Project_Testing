@@ -3,30 +3,32 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /*font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;*/
+  /*line-height: 1.5;*/
+  /*font-weight: 400;*/
 
-  color: rgba(255, 255, 255, 0.87);
+
+
+  /*color: rgba(255, 255, 255, 0.87);*/
   background-color: #1f2937;
-  background-color: #ffffff;
+  /*background-color: #ffffff;*/
 
 
 
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /*font-synthesis: none;*/
+  /*text-rendering: optimizeLegibility;*/
+  /*-webkit-font-smoothing: antialiased;*/
+  /*-moz-osx-font-smoothing: grayscale;*/
 }
 
 /* src/ChatbotCard.css */
 
 .chatbot-card {
   width: 100%;
-  max-width: 600px;
-  height: 75vh;
-  margin: 5vh auto;
+  /*max-width: 600px;*/
+  height: 88vh;
+  /*margin: 5vh auto;*/
   display: flex;
   flex-direction: column;
   border-radius: 12px;
@@ -38,11 +40,12 @@
 
 .chatbot-header {
   padding: 15px;
-  background-color: #76949f;
+  background-color: #1f2937;
   color: white;
   text-align: center;
   font-size: 1.25rem;
   font-weight: bold;
+
 }
 
 .chatbot-messages {

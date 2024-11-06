@@ -1,5 +1,5 @@
-import NavBar from "./NavBar.tsx";
-import MessageBox from "./MessageBox.tsx";
+import NavBar from "../components/NavBar.tsx";
+import MessageBox from "../components/MessageBox.tsx";
 import {useEffect, useState} from "react";
 import axios from 'axios';
 
@@ -15,7 +15,7 @@ interface Message {
     text: string;
 }
 
-export default function ChatbotPage() {
+export default function ChatbotPage2() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputText, setInputText] = useState('');
     const [loading, setLoading] = useState(false);

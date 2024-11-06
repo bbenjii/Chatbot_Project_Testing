@@ -1,34 +1,35 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route } from 'react-router-dom';
+
+import Sidebar from "./components/Sidebar.tsx";
+import ChatbotPage from "./pages/ChatbotPage.tsx";
+import Navigation from "./components/Navigation.tsx";
+import KnowledgeBase from "./pages/KnowledgeBase.tsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [hideSideBar, setHideSideBar] = useState(true);
+
+    const showHideSidebar = () => {
+        setHideSideBar(!hideSideBar);
+        console.log(hideSideBar);
+    };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <>
+          <div className="antialiased bg-gray-50 dark:bg-gray-900 ">
+              <div>
+                  <Navigation hideSideBar={showHideSidebar}/>
+                  <Sidebar hidden={hideSideBar} />
+              </div>
+
+              <main className="p-4 md:ml-64 h-full pt-20">
+                  <Routes>
+                      <Route path={"/"} element={<ChatbotPage/>} />
+                      <Route path={"/knowledge-base"} element={<KnowledgeBase />} />
+                  </Routes>
+              </main>
+          </div>
+      </>
   )
 }
 
