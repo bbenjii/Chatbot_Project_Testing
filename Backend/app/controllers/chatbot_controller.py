@@ -48,7 +48,8 @@ class Chatbot:
         )
 
         # Initialize State Machine
-        self.state_machine = StateMachine(self)
+        self.state_
+        machine = StateMachine(self)
 
         self.language = language
         self.systemPrompt = systemPrompt
