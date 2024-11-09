@@ -23,7 +23,6 @@ def chat():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 # Route for adding documents to the knowledge base
 @app.route('/api/knowledge-base/add', methods=['POST'])
 def add_document():
