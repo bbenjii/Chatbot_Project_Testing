@@ -4,7 +4,7 @@ from controllers.chatbot_controller import Chatbot
 from controllers.vector_store_controller import vectorStore_controller as VectorStore
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+CORS(app)
 # Initialize controllers
 chatbot = Chatbot()
 vector_store = VectorStore()
