@@ -16,7 +16,7 @@ from langgraph.graph.message import add_messages
 from typing_extensions import Annotated, TypedDict
 
 from .chatbot_states import StateMachine  # Import the StateMachine class
-from .vector_store_controller import vectorStore_controller
+from .vector_store_controller import VectorStoreController
 
 # from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, trim_messages
 
@@ -58,7 +58,7 @@ class Chatbot:
 
         # self.vector_name = "One-Piece-KB_2"
         self.vector_name = "QC_Life_Docs"
-        self.vectorStore = vectorStore_controller(collection_name=self.vector_name)
+        self.vectorStore = VectorStoreController(collection_name=self.vector_name)
 
         self.SearchTool = self.VectorSearchTool(self.vectorStore)
 

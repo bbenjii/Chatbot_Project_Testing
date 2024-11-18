@@ -1,13 +1,14 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from controllers.chatbot_controller import Chatbot
-from controllers.vector_store_controller import vectorStore_controller as VectorStore
-
+from controllers.vector_store_controller import VectorStoreController as VectorStore
+from controllers.azure_storage_controller import AzureStorageController as AzureStorage
 app = Flask(__name__)
 CORS(app)
 # Initialize controllers
 chatbot = Chatbot()
 vector_store = VectorStore()
+azure_storage = AzureStorage()
 
 
 # Route for chatbot interaction
@@ -23,6 +24,16 @@ def chat():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+# Route for fetching documents from Azure Storage
+@app.route('/api/storage/files', methods=['GET'])
+def fetch_documents():
+    try:
+        response = azure_storage.list_files_with_urls()
+        print(response)
+        return response, 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 # Route for adding documents to the knowledge base
 @app.route('/api/knowledge-base/add', methods=['POST'])
 def add_document():

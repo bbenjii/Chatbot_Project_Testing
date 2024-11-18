@@ -5,162 +5,139 @@ CUSTOM CLASS TO PERFORM OPERATIONS ON VECTOR STORE
 - QUERY SEARCH
 """
 import os
-import re
-import time
-
+import logging
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 from typing import List, Literal
 
-# LangChain imports
 from langchain_openai import AzureOpenAIEmbeddings
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_community.document_loaders import BSHTMLLoader, PyPDFLoader, WebBaseLoader
 from langchain_mongodb.vectorstores import MongoDBAtlasVectorSearch
 from langchain_core.documents import Document
 from pymongo.errors import DuplicateKeyError
-from pymongo.operations import SearchIndexModel, IndexModel
-from langchain_text_splitters import CharacterTextSplitter
+from pymongo.operations import SearchIndexModel
 
-# MongoDB and LangChain setup
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-load_dotenv()  # Load .env variables
+load_dotenv()  # Load environment variables
 
-class vectorStore_controller:
-    def __init__(self, database_name = os.getenv("DB_NAME"), collection_name = os.getenv("QC_COLLECTION"), search_index_name = os.getenv("SEARCH_INDEX_NAME")):
-        """SET UP FOR THE VECTOR STORE"""
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-        # Set up MongoDB client and collection
-        self.client = MongoClient(os.getenv("MONGODB_URI"), server_api=ServerApi('1'))
-        self.db = self.client[database_name]
-        self.collection = self.db[collection_name]
-        self.search_index_name = search_index_name
+class VectorStoreController:
+    def __init__(self, database_name=None, collection_name=None, search_index_name=None):
+        """Initialize the vector store controller."""
+        # Environment variables
+        self.database_name = database_name or os.getenv("DB_NAME")
+        self.collection_name = collection_name or os.getenv("QC_COLLECTION")
+        self.search_index_name = search_index_name or os.getenv("SEARCH_INDEX_NAME")
         self.unique_index_name = "unique_source_text_index"
 
-        # Initialize the embeddings model
-        self.embeddings_model = AzureOpenAIEmbeddings(azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT"))
+        # MongoDB setup
+        self.client = MongoClient(os.getenv("MONGODB_URI"), server_api=ServerApi('1'))
+        self.db = self.client[self.database_name]
+        self.collection = self.db[self.collection_name]
 
-        # Set up the vector store
+        # Embeddings model
+        self.embeddings_model = AzureOpenAIEmbeddings(
+            azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT")
+        )
+
+        # Vector store
         self.vector_store = MongoDBAtlasVectorSearch(
             collection=self.collection,
             embedding=self.embeddings_model,
-            index_name=self.search_index_name,  # The name of the index you set up in MongoDB Atlas
-            relevance_score_fn="cosine"  # or "euclidean", depending on your use case
+            index_name=self.search_index_name,
+            relevance_score_fn="cosine"
         )
 
+        # Ensure indices exist
         self.create_unique_index()
         self.create_vector_search_index()
 
-
-    # Perform vector search
     def vector_search(self, query: str, top_k: int = 3):
         """Perform vector search using the query."""
-
         try:
-            # Perform similarity search in MongoDB Atlas vector store
             results = self.vector_store.similarity_search(query, k=top_k)
+            logger.info(f"Vector search completed. Results: {len(results)} documents found.")
             return results
         except Exception as e:
-            print(f"Error during vector search: {e}")
+            logger.error(f"Error during vector search: {e}")
             return []
 
     def insert_data(self, sources: List[str], sources_type: Literal['html', 'url', 'pdf']):
         """Insert data into the vector store from various sources."""
         docs = []
         for source in sources:
-            datas = []
-            # extract data / text
-            if sources_type == 'html':
-                data = self.extract_from_html_doc(source)
-            elif sources_type == 'url':
-                data = self.extract_from_url(source)
-            elif sources_type == 'pdf':
-                print("Processing pdf")
-                data = self.extract_from_pdf(source)
-            else:
-                print(f"Unsupported source type: {sources_type}")
-                continue
-            # Sanitize content
-            for doc in data:
-                doc.page_content = self.sanitize_text(doc.page_content)
-                # text_splitter = CharacterTextSplitter.from_tiktoken_encoder(encoding_name="cl100k_base", chunk_size=1000,  chunk_overlap=200)
-                text_splitter = SemanticChunker(AzureOpenAIEmbeddings(azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT")),breakpoint_threshold_amount=95)
-                docs = text_splitter.split_documents([doc])
-                # print(len(docs))
-                # for doc in docs:
-                #     print(doc)
-                #     print("_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________")
+            try:
+                if sources_type == 'html':
+                    data = self.extract_from_html_doc(source)
+                elif sources_type == 'url':
+                    data = self.extract_from_url(source)
+                elif sources_type == 'pdf':
+                    data = self.extract_from_pdf(source)
+                else:
+                    logger.warning(f"Unsupported source type: {sources_type}")
+                    continue
 
-                meta_data = docs[0].metadata  # Assumed that metadata exists
-                # Add documents to MongoDB
-                try:
-                    self.add_docs_to_mongo(docs, meta_data)
-                except DuplicateKeyError as e:
-                    print(f"Document already exists: {e}")
-                except Exception as e:
-                    print(f"Error inserting documents: {e}")
+                for doc in data:
+                    doc.page_content = self.sanitize_text(doc.page_content)
+                    text_splitter = SemanticChunker(
+                        embeddings=self.embeddings_model,
+                        breakpoint_threshold_amount=95
+                    )
+                    chunks = text_splitter.split_documents([doc])
+                    meta_data = doc.metadata
+                    self.add_docs_to_mongo(chunks, meta_data)
+            except Exception as e:
+                logger.error(f"Error processing source '{source}': {e}")
 
-
-    # Function to add documents to MongoDB Atlas vector store
-    def add_docs_to_mongo(self, docs, meta_data):
-        """Add documents to MongoDB vector store."""
-        documents = []
-        for i, doc in enumerate(docs):
-            documents.append(
-                Document(page_content=doc.page_content, metadata={"chunk_id": i + 1, "upload_data":datetime.now(timezone.utc), **meta_data})
-            )
-
-        # Add documents to the vector store, which will handle embedding storage
-        self.vector_store.add_documents(docs)
-        print(f"Successfully added {len(docs)} documents to the vector store.")
-
+    def add_docs_to_mongo(self, docs: List[Document], meta_data: dict):
+        """Add documents to the MongoDB vector store."""
+        try:
+            documents = [
+                Document(
+                    page_content=doc.page_content,
+                    metadata={"chunk_id": i + 1, "upload_date": datetime.now(timezone.utc), **meta_data}
+                )
+                for i, doc in enumerate(docs)
+            ]
+            self.vector_store.add_documents(documents)
+            logger.info(f"Successfully added {len(documents)} documents to the vector store.")
+        except DuplicateKeyError as e:
+            logger.warning(f"Duplicate document skipped: {e}")
+        except Exception as e:
+            logger.error(f"Error adding documents to MongoDB: {e}")
 
     def extract_from_html_doc(self, file_path):
+        """Extract text from HTML documents."""
         loader = BSHTMLLoader(file_path)
-        data = loader.load()
-        return data
-
-        # Sanitize content
-        data[0].page_content = self.sanitize_text(data[0].page_content)
-        text_splitter = SemanticChunker(
-            AzureOpenAIEmbeddings(azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT")))
-        docs = text_splitter.split_documents([data[0]])
-        return docs
+        return loader.load()
 
     def extract_from_url(self, url):
-        headers = {"User-Agent": os.getenv("USER_AGENT") }
+        """Extract text from web pages."""
+        headers = {"User-Agent": os.getenv("USER_AGENT")}
         loader = WebBaseLoader(url, header_template=headers)
-        data = loader.load()
-        return data
-
-        # Sanitize content
-        # data[0].page_content = self.sanitize_text(data[0].page_content)
-        # text_splitter = SemanticChunker(AzureOpenAIEmbeddings(azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT")))
-        # docs = text_splitter.split_documents([data[0]])
-        # return docs
+        return loader.load()
 
     def extract_from_pdf(self, file_path):
+        """Extract text from PDF files."""
         loader = PyPDFLoader(file_path)
-        data = loader.load_and_split()
+        return loader.load_and_split()
 
-        return data
-
-
-    def sanitize_text(self, text):
+    def sanitize_text(self, text: str):
+        """Clean and sanitize text content."""
         return text.replace("\r", "").replace("\t", "").replace("\n\n", "")
 
-
     def create_vector_search_index(self):
-        """Create a vector search index in MongoDB Atlas."""
+        """Create a vector search index in MongoDB."""
+        if self.search_index_exists(self.search_index_name):
+            logger.info(f"Search index '{self.search_index_name}' already exists.")
+            return
 
         try:
-            # Check if the index already exists
-            if self.search_index_exists(self.search_index_name):
-                return
-
-            # Create the index model, then create the search index
             search_index_model = SearchIndexModel(
                 definition={
                     "fields": [
@@ -172,58 +149,46 @@ class vectorStore_controller:
                         },
                     ]
                 },
-                name="vector_query_index",
-                type="vectorSearch"
+                name=self.search_index_name
             )
-
-            # Create the index
             self.collection.create_search_index(model=search_index_model)
-
-            print(f"Successfully created search index '{self.search_index_name}'.")
-            return
-
-
+            logger.info(f"Search index '{self.search_index_name}' created successfully.")
         except Exception as e:
-            print(f"Error creating search index: {e}")
-
+            logger.error(f"Error creating search index '{self.search_index_name}': {e}")
 
     def delete_all_documents(self):
+        """Delete all documents from the collection."""
         try:
-            # Delete all documents from the collection
             result = self.collection.delete_many({})
-            print(f"Deleted {result.deleted_count} documents from the collection.")
+            logger.info(f"Deleted {result.deleted_count} documents from the collection.")
         except Exception as e:
-            print(f"Error while deleting documents: {e}")
+            logger.error(f"Error while deleting documents: {e}")
 
     def create_unique_index(self):
-        """Create a unique index on 'source' and 'page_content' to prevent duplicates."""
-        try:
-            if self.unique_index_exists(self.unique_index_name):
-                return
+        """Create a unique index to prevent duplicate documents."""
+        if self.unique_index_exists(self.unique_index_name):
+            logger.info(f"Unique index '{self.unique_index_name}' already exists.")
+            return
 
+        try:
             self.collection.create_index(
                 [("source", 1), ("text", 1)],
                 unique=True,
                 name=self.unique_index_name
             )
-            print("Unique index on 'source' and 'text' created successfully.")
+            logger.info(f"Unique index '{self.unique_index_name}' created successfully.")
         except DuplicateKeyError as e:
-            print(f"Duplicate key error: {e}")
+            logger.warning(f"Duplicate key error: {e}")
         except Exception as e:
-            print(f"Error creating unique index: {e}")
+            logger.error(f"Error creating unique index: {e}")
 
     def search_index_exists(self, index_name: str):
-        exists = False
-
-        for index in self.collection.list_search_indexes():
-            if index_name in index.values():
-                exists = True
-
-        return exists
+        """Check if a search index exists."""
+        return any(index.get("name") == index_name for index in self.collection.list_search_indexes())
 
     def unique_index_exists(self, index_name: str):
+        """Check if a unique index exists."""
         return index_name in self.collection.index_information()
-
 #
 #
 #
@@ -238,7 +203,7 @@ class vectorStore_controller:
 #
 #
 # one_piece_collection = "One-Piece-KB_2"
-# one_piece_vectorstore = vectorStore_controller(collection_name=one_piece_collection)
+# one_piece_vectorstore = VectorStoreController(collection_name=one_piece_collection)
 #
 # def onePiece_insert():
 #     one_piece_chapter_links = [
@@ -271,7 +236,7 @@ class vectorStore_controller:
 #         # print("____________________________________________________________________________________________________")
 #
 #
-# QC_vectorstore = vectorStore_controller()
+# QC_vectorstore = VectorStoreController()
 # def insert_qc():
 #     qc_links = [
 #         "https://qclife.ca/contact-us/",
