@@ -33,8 +33,8 @@ const Sidebar: React.FC<SidebarProps> = ({ hidden }) => {
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
                                     <path
-                                        fill-rule="evenodd"
-                                        clip-rule="evenodd"
+                                        fillRule="evenodd"
+                                        clipRule="evenodd"
                                         d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                                     ></path>
                                 </svg>
@@ -82,9 +82,9 @@ const Sidebar: React.FC<SidebarProps> = ({ hidden }) => {
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
                                     <path
-                                        fill-rule="evenodd"
+                                        fillRule="evenodd"
                                         d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
-                                        clip-rule="evenodd"
+                                        clipRule="evenodd"
                                     ></path>
                                 </svg>
                                 <span className="flex-1 ml-3 text-left whitespace-nowrap">
@@ -110,9 +110,9 @@ const Sidebar: React.FC<SidebarProps> = ({ hidden }) => {
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
                                     <path
-                                        fill-rule="evenodd"
+                                        fillRule="evenodd"
                                         d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
-                                        clip-rule="evenodd"
+                                        clipRule="evenodd"
                                     ></path>
                                 </svg>
                                 <span className="flex-1 ml-3 text-left whitespace-nowrap">
@@ -142,9 +142,9 @@ const Sidebar: React.FC<SidebarProps> = ({ hidden }) => {
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
                                     <path
-                                        fill-rule="evenodd"
+                                        fillRule="evenodd"
                                         d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                        clip-rule="evenodd"
+                                        clipRule="evenodd"
                                     ></path>
                                 </svg>
                                 <span className="flex-1 ml-3 text-left whitespace-nowrap"
@@ -158,9 +158,9 @@ const Sidebar: React.FC<SidebarProps> = ({ hidden }) => {
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
                                     <path
-                                        fill-rule="evenodd"
+                                        fillRule="evenodd"
                                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd"
+                                        clipRule="evenodd"
                                     ></path>
                                 </svg>
                             </button>
@@ -222,9 +222,9 @@ const Sidebar: React.FC<SidebarProps> = ({ hidden }) => {
                             xmlns="http://www.w3.org/2000/svg"
                         >
                             <path
-                                fill-rule="evenodd"
+                                fillRule="evenodd"
                                 d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                                clip-rule="evenodd"
+                                clipRule="evenodd"
                             ></path>
                         </svg>
                     </a>

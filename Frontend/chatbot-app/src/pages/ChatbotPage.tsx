@@ -1,6 +1,6 @@
 // import NavBar from "./NavBar.tsx";
 import MessageBox from "../components/MessageBox.tsx";
-import LoadingSpin from "../components/LoadingSpin.tsx";
+// import LoadingSpin from "../components/LoadingSpin.tsx";
 import {useEffect, useState} from "react";
 import axios from 'axios';
 
@@ -27,6 +27,7 @@ export default function ChatbotPage() {
         setInputText("");
         setLoading(false)
     }, [])
+
     const sendMessage = async (query: string = inputText) => {
         setLoading(true);
         setMessages((prevMessages) => [...prevMessages, { sender: "human", text: query }]);
@@ -50,12 +51,6 @@ export default function ChatbotPage() {
     return (
         <>
             <div className="min-h-full ">
-                {/*<NavBar/>*/}
-                {/*<header className="bg-white shadow">*/}
-                {/*    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">*/}
-                {/*        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Chatbot</h1>*/}
-                {/*    </div>*/}
-                {/*</header>*/}
                 <main>
                     <div className="flex justify-center">
                         <div className="flex w-full">
