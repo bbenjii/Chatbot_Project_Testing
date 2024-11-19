@@ -2,6 +2,7 @@ import os
 import logging
 import uuid
 from datetime import datetime, timedelta, timezone
+import mimetypes
 
 from aiohttp.web_fileresponse import content_type
 from dotenv import load_dotenv
@@ -25,11 +26,29 @@ class AzureStorageController:
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger(__name__)
 
-
-    def add_file(self, file_path, blob_name):
+    def add_file(self, file_content, blob_name, content_type):
         try:
             blob_client = self.container_client.get_blob_client(blob_name)
-            content_settings = ContentSettings(content_type="application/pdf")
+            content_settings = ContentSettings(content_type=content_type)
+
+            # Upload the file content
+            blob_client.upload_blob(file_content, content_settings=content_settings, overwrite=True)
+            self.logger.info(f"File uploaded as blob '{blob_name}' successfully.")
+            return blob_client.url
+
+        except Exception as ex:
+            self.logger.error(f"Error uploading file: {ex}")
+            raise  # Re-raise the exception to be caught by the calling function
+
+    def add_loca_file(self, file_path, blob_name):
+        try:
+            # Determine content type based on file extension
+            content_type, _ = mimetypes.guess_type(file_path)
+            if not content_type:
+                content_type = "application/octet-stream"  # Default content type if unknown
+
+            blob_client = self.container_client.get_blob_client(blob_name)
+            content_settings = ContentSettings(content_type=content_type)
             with open(file_path, "rb") as data:
                 blob_client.upload_blob(data, content_settings=content_settings, overwrite=True)
                 self.logger.info(f"File '{file_path}' uploaded as blob '{blob_name}' successfully.")
@@ -63,9 +82,11 @@ class AzureStorageController:
             blob_list = self.container_client.list_blobs()
             blob_urls = []
             for blob in blob_list:
-
-                blob_urls.append({"name":blob.name, "url": self.get_blob_url_with_sas(blob.name)})
-
+                # print(blob)
+                blob_name = blob.get("name")
+                blob_content_type = blob.get("content_settings").get("content_type")
+                blob_urls.append({"name":blob_name, "url": self.get_blob_url_with_sas(blob_name), "content_type":blob_content_type})
+            #
             # blob_urls = [f"{self.account_url}/{self.container_name}/{blob.name}" for blob in blob_list]
             return blob_urls
         except Exception as ex:
@@ -104,14 +125,16 @@ class AzureStorageController:
 
 cv_path = "../../Test-Documents/ben-resumes/benollomo-cv.pdf"
 cover_letter_path = "../../Test-Documents/ben-resumes/benollomo-cover-letter.pdf"
+goku_1_path = "../../Test-Documents/images/picolo.jpeg"
+
 # download_path = "../../Test-Documents/ben-resumes/blob_download.pdf"
 #
 #
 storage = AzureStorageController()
 
 # add File
-# storage.add_file(cv_path, "benollomo-cv")
-storage.add_file(cover_letter_path, "benollomo-cover-letter")
+# storage.add_loca_file(goku_1_path, "Picolo")
+# storage.add_loca_file(cover_letter_path, "benollomo-cover-letter")
 
 # storage.delete_file("benollomo-cv")
 # storage.delete_file("benollomo-cv.pdf")
@@ -126,3 +149,8 @@ storage.add_file(cover_letter_path, "benollomo-cover-letter")
 
 # print(storage.generate_blob_name("benjamin"))
 
+# Determine content type based on file extension
+# content_type, _ = mimetypes.guess_type(goku_1_path)
+# if not content_type:
+#     content_type = "application/octet-stream"  # Default content type if unknown
+# print(content_type)
