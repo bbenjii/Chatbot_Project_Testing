@@ -103,7 +103,7 @@ while True:
 # workflow.add_node("model", call_model)
 #
 # memory = MemorySaver()
-# app = workflow.compile(checkpointer=memory)
+# app_old = workflow.compile(checkpointer=memory)
 #
 # config = {"configurable": {"thread_id": "abc123"}}
 # query = "Hi, I'm Ben"
@@ -112,7 +112,7 @@ while True:
 #
 #
 # input_messages = [HumanMessage(query)]
-# output = app.invoke({"messages": input_messages, "language": language}, config)
+# output = app_old.invoke({"messages": input_messages, "language": language}, config)
 # output["messages"][-1].pretty_print()
 #
 # messages = [
@@ -128,12 +128,12 @@ while True:
 #     HumanMessage(content="having fun?"),
 #     AIMessage(content="yes!"),
 # ]
-# # output = app.invoke({"messages": messages}, config)
+# # output = app_old.invoke({"messages": messages}, config)
 #
 #
 # config2 = {"configurable": {"thread_id": "abc123"}} #id reffering to an existing conversation
 # input_messages = [HumanMessage("what's my name?")]
-# output = app.invoke({"messages": input_messages}, config2)
+# output = app_old.invoke({"messages": input_messages}, config2)
 # output["messages"][-1].pretty_print()
 #
 #

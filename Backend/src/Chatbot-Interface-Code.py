@@ -15,7 +15,7 @@ from chatbot1_class import Chatbot1 as Chatbot
 #     "template":"../../Frontend2/Widget-Interface/templates",
 #     "static":"../../Frontend2/Widget-Interface/static"
 # }
-# app = Flask(__name__, template_folder=frontend["template"], static_folder=frontend["static"])
+# app_old = Flask(__name__, template_folder=frontend["template"], static_folder=frontend["static"])
 
 """ Or simply name the folder (works if the folder includes static and templates subfolders)"""
 folder = "Interface-1"
