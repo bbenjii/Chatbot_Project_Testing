@@ -5,7 +5,7 @@ from bson import ObjectId
 import logging
 from app.core.database import Database
 
-from app.models.chat import ChatThread, ChatMessage
+from app.models.chatbot import ChatbotThread, ChatbotMessage
 from app.core.exceptions import AppException
 
 logger = logging.getLogger(__name__)
@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 class ThreadService:
     def __init__(self):
         self.db = Database.get_db()
-        self.thread_model = ChatThread(self.db)
-        self.message_model = ChatMessage(self.db)
+        self.thread_model = ChatbotThread(self.db)
+        self.message_model = ChatbotMessage(self.db)
 
     async def create_thread(
             self,
@@ -28,7 +28,7 @@ class ThreadService:
         try:
             # Generate default title if none provided
             if not title:
-                title = f"Chat {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')}"
+                title = f"Chatbot {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')}"
 
             # Create thread
             thread_id = await self.thread_model.create_thread(
@@ -270,4 +270,4 @@ if __name__ == '__main__':
 
         # await thread_service.create_thread(user_id, title, initial_message)
 
-    asyncio.run(main())
+    # asyncio.run(main())

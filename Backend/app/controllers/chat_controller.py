@@ -1,6 +1,6 @@
 # app/controllers/chat_controller.py
 from flask import Blueprint, request, jsonify
-from app.services.chat_service import ChatService
+from app.services.chatbot_service import ChatService
 from app.controllers.base_controller import BaseController
 from app.core.security import Security
 

@@ -1,4 +1,4 @@
-# app/core/chat_states.py
+# app/core/chatbot_states.py
 from abc import ABC, abstractmethod
 from typing import Optional, Dict, Any, List
 from datetime import datetime, timezone
@@ -7,7 +7,12 @@ from enum import Enum
 
 from app.core.exceptions import AppException
 from app.services.vector_service import VectorService
-from app.models.chat import ChatMessage
+from app.models.chatbot import ChatbotMessage
+
+
+# logging.basicConfig(
+#     level=logging.INFO,
+# )
 
 logger = logging.getLogger(__name__)
 
@@ -22,8 +27,8 @@ class StateType(Enum):
     ERROR = "error"
 
 
-class ChatContext:
-    """Context object to maintain chat state and data."""
+class ChatbotContext:
+    """Context object to maintain chatbot state and data."""
 
     def __init__(self,
                  user_id: str,
@@ -42,19 +47,19 @@ class ChatContext:
 
 
 class State(ABC):
-    """Abstract base class for all chat states."""
+    """Abstract base class for all chatbot states."""
 
     def __init__(self, name: StateType, services: Dict[str, Any]):
         self.name = name
         self.services = services
-        self.logger = logging.getLogger(f"ChatState.{name.value}")
+        self.logger = logging.getLogger(f"ChatbotState.{name.value}")
 
     @abstractmethod
-    async def handle(self, context: ChatContext) -> StateType:
+    async def handle(self, context: ChatbotContext) -> StateType:
         """Handle the current state and return next state."""
         pass
 
-    async def log_transition(self, context: ChatContext, next_state: StateType):
+    async def log_transition(self, context: ChatbotContext, next_state: StateType):
         """Log state transition with context details."""
         duration = (datetime.now(timezone.utc) - context.start_time).total_seconds()
         self.logger.info(
@@ -64,12 +69,12 @@ class State(ABC):
 
 
 class IdleState(State):
-    """Initial state of the chat system."""
+    """Initial state of the chatbot system."""
 
     def __init__(self, services: Dict[str, Any]):
         super().__init__(StateType.IDLE, services)
 
-    async def handle(self, context: ChatContext) -> StateType:
+    async def handle(self, context: ChatbotContext) -> StateType:
         try:
             if not context.current_message:
                 raise AppException("No message provided")
@@ -94,7 +99,7 @@ class UserInputState(State):
     def __init__(self, services: Dict[str, Any]):
         super().__init__(StateType.USER_INPUT, services)
 
-    async def handle(self, context: ChatContext) -> StateType:
+    async def handle(self, context: ChatbotContext) -> StateType:
         try:
             # Save the message to history
             await self.services['message_model'].create_message(
@@ -119,7 +124,7 @@ class ToolSelectionState(State):
     def __init__(self, services: Dict[str, Any]):
         super().__init__(StateType.TOOL_SELECTION, services)
 
-    async def handle(self, context: ChatContext) -> StateType:
+    async def handle(self, context: ChatbotContext) -> StateType:
         try:
             # Tool selection prompt
             tool_selection_messages = [{
@@ -127,8 +132,6 @@ class ToolSelectionState(State):
                 "content": """Analyze the user query and determine which tools are needed.
                 Available tools:
                 - vector_search: Search for relevant information in the knowledge base
-                - calculator: Perform mathematical calculations
-                - web_search: Search the internet for information
 
                 Respond with a JSON array of required tools, or empty array if no tools needed."""
             }, {
@@ -172,7 +175,7 @@ class VectorSearchState(State):
         super().__init__(StateType.VECTOR_SEARCH, services)
         self.vector_service = services['vector_service']
 
-    async def handle(self, context: ChatContext) -> StateType:
+    async def handle(self, context: ChatbotContext) -> StateType:
         try:
             # Perform vector search
             results = await self.vector_service.search_similar(
@@ -209,7 +212,7 @@ class ResponseState(State):
     def __init__(self, services: Dict[str, Any]):
         super().__init__(StateType.RESPONSE, services)
 
-    async def handle(self, context: ChatContext) -> StateType:
+    async def handle(self, context: ChatbotContext) -> StateType:
         try:
             # Construct messages with context
             messages = self._construct_messages(context)
@@ -218,7 +221,7 @@ class ResponseState(State):
             response = await self.services['model'].ainvoke(messages)
             context.response = response.content
 
-            # Save assistant message
+            # Save chatbot message
             await self.services['message_model'].create_message(
                 thread_id=context.thread_id,
                 user_id=context.user_id,
@@ -239,7 +242,7 @@ class ResponseState(State):
             context.error = e
             return StateType.ERROR
 
-    def _construct_messages(self, context: ChatContext) -> List[Dict[str, str]]:
+    def _construct_messages(self, context: ChatbotContext) -> List[Dict[str, str]]:
         """Construct messages for the model."""
         system_content = self._get_system_prompt(context)
 
@@ -259,10 +262,10 @@ class ResponseState(State):
 
         return messages
 
-    def _get_system_prompt(self, context: ChatContext) -> str:
+    def _get_system_prompt(self, context: ChatbotContext) -> str:
         """Get system prompt with context."""
         prompt = (
-            "You are a helpful virtual assistant. "
+            "You are a helpful virtual chatbot. "
             "Format your responses in Markdown for better readability. "
             "Be concise yet informative, and use bullet points when appropriate. "
             "Make key terms and phrases bold using **asterisks**."
@@ -280,7 +283,7 @@ class ErrorState(State):
     def __init__(self, services: Dict[str, Any]):
         super().__init__(StateType.ERROR, services)
 
-    async def handle(self, context: ChatContext) -> StateType:
+    async def handle(self, context: ChatbotContext) -> StateType:
         try:
             error_message = str(context.error) if context.error else "Unknown error"
             self.logger.error(f"Error in state machine: {error_message}")
@@ -306,8 +309,8 @@ class ErrorState(State):
             return StateType.IDLE
 
 
-class ChatStateMachine:
-    """Manages state transitions for the chat system."""
+class ChatbotStateMachine:
+    """Manages state transitions for the chatbot system."""
 
     def __init__(self, services: Dict[str, Any]):
         self.services = services
@@ -320,7 +323,7 @@ class ChatStateMachine:
             StateType.ERROR: ErrorState(services)
         }
         self.current_state = StateType.IDLE
-        self.logger = logging.getLogger("ChatStateMachine")
+        self.logger = logging.getLogger("ChatbotStateMachine")
 
     async def process_message(
             self,
@@ -330,7 +333,7 @@ class ChatStateMachine:
             message_history: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         """Process a message through the state machine."""
-        context = ChatContext(user_id, thread_id, message_history)
+        context = ChatbotContext(user_id, thread_id, message_history)
         context.current_message = message
 
         try:

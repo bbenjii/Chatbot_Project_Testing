@@ -2,10 +2,13 @@
 from app.core.database import Database
 from app.core.exceptions import AppException
 from typing import Optional, Any
-from app.config import Settings
+from app.config.settings import Settings
 
 import logging
 
+# logging.basicConfig(
+#     level=logging.INFO,
+# )
 logger = logging.getLogger(__name__)
 
 class BaseService:
@@ -14,10 +17,10 @@ class BaseService:
 
 
 import asyncio
-# if __name__ == '__main__':
-#     async def main():
-#
-#         await Database.connect()
-#         service = BaseService()
-#
-#     asyncio.run(main())
+if __name__ == '__main__':
+    async def main():
+
+        await Database.connect()
+        service = BaseService()
+
+    asyncio.run(main())

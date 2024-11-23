@@ -8,7 +8,7 @@ load_dotenv()
 
 import jwt
 
-from app.config import Settings
+from app.config.settings import Settings
 from app.core.database import Database
 from app.models.user import User, UserCreate, UserUpdate
 

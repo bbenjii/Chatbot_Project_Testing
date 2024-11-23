@@ -12,29 +12,31 @@ from langchain_experimental.text_splitter import SemanticChunker
 
 from langchain_openai import AzureOpenAIEmbeddings
 
-from app.config import settings
+from app.config.settings import Settings
 from app.models.vector_chunk import VectorChunk
 from app.core.exceptions import AppException
 from app.core.database import Database
+from app.services.base_service import BaseService
+from app.utils.text_processor import TextProcessor
 
 logger = logging.getLogger(__name__)
 load_dotenv()  # Load environment variables
 
 
-class VectorService:
+class VectorService(BaseService):
+
     def __init__(self):
-        self.db = Database.get_db()
+        super().__init__()
         self.vector_model = VectorChunk(self.db)
-        # Initialize Azure OpenAI embeddings
         self.embeddings = AzureOpenAIEmbeddings(
             azure_endpoint=os.getenv("AZURE_OPENAI_EMBEDDING_ENDPOINT"),
-            # openai_api_key=settings.AZURE_OPENAI_KEY,
-            # deployment=settings.AZURE_OPENAI_EMBEDDING_DEPLOYMENT,
+            # openai_api_key=settings.py.AZURE_OPENAI_KEY,
+            # deployment=settings.py.AZURE_OPENAI_EMBEDDING_DEPLOYMENT,
             # chunk_size=1000  # Adjust based on your needs
         )
 
         # Configure text splitter
-        self.text_splitter = RecursiveCharacterTextSplitter(
+        self.recursive_character_text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
             chunk_overlap=200,
             length_function=len,
@@ -43,8 +45,10 @@ class VectorService:
 
         self.semantic_text_splitter = SemanticChunker(
             embeddings=self.embeddings,
-            breakpoint_threshold_amount=95
+            breakpoint_threshold_amount=70
         )
+
+        self.text_splitter = self.semantic_text_splitter
 
     async def process_document(
             self,
@@ -57,6 +61,7 @@ class VectorService:
         try:
             # Split text into chunks
             chunks = self.text_splitter.split_text(text_content)
+
 
             # Generate embeddings for all chunks
             embeddings = await self._generate_embeddings_batch(chunks)
@@ -209,3 +214,28 @@ class VectorService:
         except Exception as e:
             logger.error(f"Error reprocessing document: {e}")
             raise AppException(f"Failed to reprocess document: {str(e)}")
+
+
+import asyncio
+
+if __name__ == '__main__':
+    async def main():
+        cv_path = "../../Test-Documents/ben-resumes/benollomo-cv.pdf"
+        cover_letter_path = "../../Test-Documents/ben-resumes/benollomo-cover-letter.pdf"
+        goku_1_path = "../../Test-Documents/images/picolo.jpeg"
+
+
+        file = None
+        with open(cover_letter_path, "rb") as data:
+            file = data.read()
+        textprocessor = TextProcessor()
+        text_content = await textprocessor.extract_text(file, "application/pdf")
+        print(text_content)
+
+        await Database.connect()
+
+        service = VectorService()
+        vector = await service.process_document("123", "123", text_content)
+        # print(vector)
+
+    # asyncio.run(main())

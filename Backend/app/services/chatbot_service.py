@@ -1,11 +1,11 @@
-# app/services/chat_service.py
+# app/services/chatbot_service.py
 import os
 from dotenv import load_dotenv
 from app.core.database import Database
 
 from typing import Dict, Any
 import logging
-from app.core.chat_states import ChatStateMachine
+from app.core.chatbot_states import ChatbotStateMachine
 from app.services.vector_service import VectorService
 from app.services.thread_service import ThreadService
 from app.core.exceptions import AppException
@@ -13,20 +13,20 @@ from app.services.base_service import BaseService
 from datetime import datetime, timezone
 from langchain_openai import AzureChatOpenAI
 from langchain_core.messages import message_chunk_to_message
-from app.models.chat import ChatThread, ChatMessage
+from app.models.chatbot import ChatbotThread, ChatbotMessage
 
 load_dotenv()  # load .env variables
 
 logger = logging.getLogger(__name__)
 
 
-class ChatService(BaseService):
+class ChatbotService(BaseService):
     def __init__(self):
         super().__init__()
         # Initialize services
         # Initialize services
-        self.thread_model = ChatThread(self.db)
-        self.message_model = ChatMessage(self.db)
+        self.thread_model = ChatbotThread(self.db)
+        self.message_model = ChatbotMessage(self.db)
 
         self.vector_service = VectorService()
         self.thread_service = ThreadService()
@@ -44,7 +44,7 @@ class ChatService(BaseService):
             )
         except Exception as e:
             logger.error(f"Failed to initialize Azure OpenAI: {e}")
-            raise AppException("Failed to initialize chat service")
+            raise AppException("Failed to initialize chatbot service")
 
         self.services = {
             'model': self.model,
@@ -54,7 +54,7 @@ class ChatService(BaseService):
         }
 
         # Initialize state machine
-        self.state_machine = ChatStateMachine(self.services)
+        self.state_machine = ChatbotStateMachine(self.services)
 
     async def process_message(
             self,
@@ -98,10 +98,10 @@ if __name__ == '__main__':
     async def main():
         user_id = "673fefff00958834568c28d1"
         thread_id = "673ffd5434c80870f8c03364"
-        message = "Whats my name?"
+        message = "whats my full name?"
 
         await Database.connect()
-        chat_service = ChatService()
-        await chat_service.process_message(user_id=user_id, thread_id=thread_id, message=message)
+        chatbot_service = ChatbotService()
+        await chatbot_service.process_message(user_id=user_id, thread_id=thread_id, message=message)
 
     asyncio.run(main())

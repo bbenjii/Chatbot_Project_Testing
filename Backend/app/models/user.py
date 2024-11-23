@@ -88,7 +88,7 @@ class User(MongoBaseModel):
                 'created_at': datetime.utcnow(),
                 'last_login': None,
                 'is_active': True,
-                'settings': settings or {
+                'settings.py': settings or {
                     'theme': 'light',
                     'language': 'en',
                     'notifications_enabled': True

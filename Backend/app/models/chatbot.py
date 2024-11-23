@@ -1,4 +1,4 @@
-# app/models/chat.py
+# app/models/chatbot.py
 from typing import Optional, Dict, Any, List
 from datetime import datetime, timezone
 from bson import ObjectId
@@ -8,8 +8,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class ChatThread(BaseModel):
-    collection_name = 'chat_threads'
+class ChatbotThread(BaseModel):
+    collection_name = 'chatbot_threads'
 
     async def create_thread(
             self,
@@ -17,10 +17,10 @@ class ChatThread(BaseModel):
             title: Optional[str] = None,
             context: Optional[Dict[str, Any]] = None
     ) -> ObjectId:
-        """Create a new chat thread."""
+        """Create a new chatbot chat thread."""
         thread = {
             'user_id': ObjectId(user_id),
-            'title': title or "New Chat",
+            'title': title or "New Chatbot",
             'created_at': datetime.now(timezone.utc),
             'updated_at': datetime.now(timezone.utc),
             'status': 'active',
@@ -38,7 +38,7 @@ class ChatThread(BaseModel):
             skip: int = 0,
             limit: int = 20
     ) -> List[Dict[str, Any]]:
-        """Get chat threads for a specific user."""
+        """Get chatbot chat threads for a specific user."""
         return await self.find_many(
             filter_dict={
                 'user_id': ObjectId(user_id),
@@ -50,8 +50,8 @@ class ChatThread(BaseModel):
         )
 
 
-class ChatMessage(BaseModel):
-    collection_name = 'chat_messages'
+class ChatbotMessage(BaseModel):
+    collection_name = 'chatbot_messages'
 
     async def create_message(
             self,
@@ -61,7 +61,7 @@ class ChatMessage(BaseModel):
             content: str,
             metadata: Optional[Dict[str, Any]] = None
     ) -> ObjectId:
-        """Create a new chat message."""
+        """Create a new chatbot message."""
         message = {
             'thread_id': ObjectId(thread_id),
             'user_id': ObjectId(user_id),
@@ -73,7 +73,7 @@ class ChatMessage(BaseModel):
         message_id = await self.insert_one(message)
 
         # Update thread's updated_at timestamp
-        await self.db['chat_threads'].update_one(
+        await self.db['chatbot_threads'].update_one(
             {'_id': ObjectId(thread_id)},
             {'$set': {'updated_at': datetime.now(timezone.utc)}}
         )
@@ -86,7 +86,7 @@ class ChatMessage(BaseModel):
             skip: int = 0,
             limit: int = 50
     ) -> List[Dict[str, Any]]:
-        """Get messages for a specific chat thread."""
+        """Get messages for a specific chatbot thread."""
         return await self.find_many(
             filter_dict={'thread_id': ObjectId(thread_id)},
             skip=skip,
